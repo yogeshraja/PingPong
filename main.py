@@ -1,33 +1,41 @@
 import turtle
 
+import pygame
+
+pygame.init()
+
 
 # functions to move paddles
 def paddle_a_up():
     y = paddle_a.ycor()
     if y <= dispHeight // 2 - 70:
-        y += 20
+        y += 30
     paddle_a.sety(y)
 
 
 def paddle_a_down():
     y = paddle_a.ycor()
     if y >= 70 - dispHeight // 2:
-        y -= 20
+        y -= 30
     paddle_a.sety(y)
 
 
 def paddle_b_up():
     y = paddle_b.ycor()
     if y <= dispHeight // 2 - 70:
-        y += 20
+        y += 30
     paddle_b.sety(y)
 
 
 def paddle_b_down():
     y = paddle_b.ycor()
     if y >= 70 - dispHeight // 2:
-        y -= 20
+        y -= 30
     paddle_b.sety(y)
+
+
+def player(path):
+    pygame.mixer.Sound(path).play()
 
 
 # define ball boundaries
@@ -35,16 +43,19 @@ def bound_ball():
     x = ball.xcor()
     y = ball.ycor()
     if y > dispHeight // 2 or y < -(dispHeight // 2):
+        player('resources/sounds/wall_bounce.wav')
         ball.dy *= -1
     if x > dispWidth // 2:
         ball.goto(0, 0)
         ball.dx *= -1
+        player('resources/sounds/ball_miss.wav')
         paddle_a.score += 1
         pen.clear()
         pen.write(arg="Player A:{}\t\t\t Player B:{}".format(paddle_a.score, paddle_b.score), align="center",
                   font=("courier", 16, "bold"))
     if x < -(dispWidth // 2):
         ball.goto(0, 0)
+        player('resources/sounds/ball_miss.wav')
         ball.dx *= -1
         paddle_b.score += 1
         pen.clear()
@@ -58,10 +69,12 @@ def check_bounce():
     ball_y = ball.ycor()
     if (-(dispWidth // 2 - 40) <= ball_x <= -(dispWidth // 2 - 50)) and (paddle_a.ycor() + 50 > ball_y >
                                                                          paddle_a.ycor() - 50):
+        player('resources/sounds/paddle_bounce.wav')
         ball.setx(-(dispWidth // 2 - 50))
         ball.dx *= -1
     elif (dispWidth // 2 - 50) <= ball_x <= (dispWidth // 2 - 40) and (paddle_b.ycor() + 50 > ball_y >
                                                                        paddle_b.ycor() - 50):
+        player('resources/sounds/paddle_bounce.wav')
         ball.setx(dispWidth // 2 - 50)
         ball.dx *= -1
 
